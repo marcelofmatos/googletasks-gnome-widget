@@ -10,7 +10,7 @@ Widget de desktop para GNOME que exibe suas tarefas pendentes do Google Tasks, c
 - Tarefas ordenadas por data de vencimento dentro de cada lista
 - Clique em qualquer tarefa abre o Google Tasks no navegador
 - Atualização automática a cada 5 minutos
-- Tema escuro semi-transparente, posicionado à esquerda do jira-widget
+- Tema escuro semi-transparente
 
 ## Requisitos
 
