@@ -23,7 +23,7 @@ Widget de desktop para GNOME que exibe suas tarefas pendentes do Google Tasks, c
 ### 1. Clonar / copiar o repositório
 
 ```bash
-# já está em ~/src/googletasks-widget/
+git clone https://github.com/marcelofmatos/googletasks-gnome-widget
 ```
 
 ### 2. Instalar dependências Python
