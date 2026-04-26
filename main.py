@@ -172,6 +172,26 @@ scrollbar slider {
     border-color: rgba(85, 85, 119, 0.4);
     background: transparent;
 }
+.reload-btn {
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #8899bb;
+    font-size: 15px;
+    font-weight: bold;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0;
+    margin: 6px 8px 0 0;
+}
+.reload-btn:hover {
+    color: #4db8ff;
+    background: rgba(77, 184, 255, 0.15);
+}
+.reload-btn:disabled {
+    color: #555577;
+    background: transparent;
+}
 """
 
 # ── Helpers ───────────────────────────────────────────────────
@@ -331,6 +351,8 @@ class GoogleTasksWidget(Gtk.Window):
         root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(root)
 
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+
         title_btn = Gtk.Button()
         title_btn.set_relief(Gtk.ReliefStyle.NONE)
         title_lbl = Gtk.Label(label="☑  GOOGLE TASKS")
@@ -338,7 +360,16 @@ class GoogleTasksWidget(Gtk.Window):
         title_lbl.get_style_context().add_class("widget-title")
         title_btn.add(title_lbl)
         title_btn.connect("clicked", lambda _: webbrowser.open("https://tasks.google.com/"))
-        root.pack_start(title_btn, False, False, 0)
+        header.pack_start(title_btn, True, True, 0)
+
+        self._reload_btn = Gtk.Button(label="⟳")
+        self._reload_btn.set_relief(Gtk.ReliefStyle.NONE)
+        self._reload_btn.get_style_context().add_class("reload-btn")
+        self._reload_btn.set_valign(Gtk.Align.START)
+        self._reload_btn.connect("clicked", self._on_reload_clicked)
+        header.pack_end(self._reload_btn, False, False, 0)
+
+        root.pack_start(header, False, False, 0)
 
         self.meta_lbl = Gtk.Label(label="   carregando…")
         self.meta_lbl.set_halign(Gtk.Align.START)
@@ -363,6 +394,12 @@ class GoogleTasksWidget(Gtk.Window):
 
     def _schedule_refresh(self):
         threading.Thread(target=self._fetch_and_update, daemon=True).start()
+
+    def _on_reload_clicked(self, button):
+        button.set_sensitive(False)
+        self.meta_lbl.set_text("   atualizando…")
+        self._schedule_refresh()
+        GLib.timeout_add(800, lambda: button.set_sensitive(True) or False)
 
     def _fetch_and_update(self):
         try:
